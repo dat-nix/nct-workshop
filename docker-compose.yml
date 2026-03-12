@@ -1,0 +1,29 @@
+services:
+
+  challenge-01:
+    build: ./challenge-01-lyrics
+    container_name: nct-challenge-01
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+
+  challenge-02:
+    build: ./challenge-02-idor
+    container_name: nct-challenge-02
+    restart: unless-stopped
+    ports:
+      - "5001:5000"
+
+  challenge-03:
+    build: ./challenge-03-robots
+    container_name: nct-challenge-03
+    restart: unless-stopped
+    ports:
+      - "5002:5000"
+
+  challenge-04:
+    build: ./challenge-04-exif
+    container_name: nct-challenge-04
+    restart: unless-stopped
+    ports:
+      - "5003:5000"

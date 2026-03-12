@@ -1,0 +1,477 @@
+/* =============================================
+   NCT CTF — Challenge 02: IDOR
+   Aesthetic: Clean dark corporate / hacker
+   ============================================= */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0a0a0f;
+  --surface: #111118;
+  --border:  #1f1f2e;
+  --accent:  #4ade80;   /* terminal green */
+  --danger:  #f87171;
+  --gold:    #fbbf24;
+  --text:    #e2e8f0;
+  --muted:   #4a5568;
+  --code-bg: #0d1117;
+}
+
+html, body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ---- Nav ---- */
+nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav-inner {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.nav-logout {
+  color: var(--danger);
+  text-decoration: none;
+  font-size: 0.8rem;
+  border: 1px solid var(--danger);
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.nav-logout:hover { background: rgba(248,113,113,0.1); }
+
+/* ---- Logo badge ---- */
+.logo-badge {
+  background: var(--accent);
+  color: #000;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+}
+
+/* ---- Login ---- */
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+  animation: fadeUp 0.5s ease both;
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.login-box h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.login-sub {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+.alert {
+  background: rgba(248,113,113,0.1);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+}
+
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.field input {
+  width: 100%;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field input:focus { border-color: var(--accent); }
+
+button[type="submit"] {
+  width: 100%;
+  margin-top: 8px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+button[type="submit"]:hover { opacity: 0.85; }
+
+.hint-text {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ---- Main layout ---- */
+.main {
+  max-width: 700px;
+  margin: 48px auto;
+  padding: 0 24px 80px;
+  animation: fadeUp 0.5s ease both;
+}
+
+/* ---- Profile card ---- */
+.profile-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.profile-card.is-admin {
+  border-color: var(--gold);
+  box-shadow: 0 0 24px rgba(251,191,36,0.08);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.profile-meta h1 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  background: var(--gold);
+  color: #000;
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.1em;
+}
+
+.profile-id {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.profile-id code {
+  font-family: 'Space Mono', monospace;
+  color: var(--accent);
+  background: var(--code-bg);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.profile-job {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.profile-body {
+  padding: 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.field-row.highlight {
+  background: rgba(251,191,36,0.06);
+  border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 4px 0;
+}
+
+.field-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  min-width: 90px;
+  padding-top: 2px;
+}
+
+.field-value {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.field-value.flag {
+  font-family: 'Space Mono', monospace;
+  color: var(--gold);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.profile-notice {
+  margin: 0 28px 20px;
+  padding: 10px 14px;
+  background: rgba(248,113,113,0.07);
+  border: 1px solid rgba(248,113,113,0.2);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: var(--danger);
+}
+
+/* ---- Nav profile buttons ---- */
+.nav-profile {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-outline {
+  font-size: 0.82rem;
+  font-family: 'Space Mono', monospace;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.field-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
+}
+
+.field-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-cell .field-label {
+  min-width: unset;
+}
+
+/* ---- Hint bar ---- */
+.hint-bar {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(74,222,128,0.06);
+  border: 1px solid rgba(74,222,128,0.2);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.hint-bar-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.hint-bar code {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  background: var(--code-bg);
+  color: var(--accent);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+.hint-bar strong { color: var(--accent); }
+
+/* ---- Creds & Objective on login ---- */
+.creds-box {
+  margin-top: 24px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.creds-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.creds-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  padding: 4px 0;
+  color: var(--muted);
+}
+.creds-row code {
+  font-family: 'Space Mono', monospace;
+  color: var(--accent);
+  font-size: 0.85rem;
+}
+.objective-box {
+  margin-top: 12px;
+  background: rgba(251,191,36,0.05);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 0.83rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.objective-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.objective-box strong { color: var(--text); }
+
+/* ---- Progress bar ---- */
+.progress-bar-wrap {
+  margin-top: 20px;
+  padding: 0 4px;
+}
+.progress-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  font-family: 'Space Mono', monospace;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.progress-bar-track {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  opacity: 0.6;
+}
+
+/* ---- Animations ---- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 520px) {
+  .profile-header { flex-direction: column; text-align: center; }
+  .field-row { flex-direction: column; gap: 4px; }
+  .field-label { min-width: unset; }
+}

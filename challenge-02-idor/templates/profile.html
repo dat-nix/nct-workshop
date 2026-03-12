@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile #{{ user.id }} — NCT CTF</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-brand"><span class="logo-badge">NCT</span> User Profiles</span>
+    <div class="nav-right">
+      <span class="nav-user">👤 {{ me.name }}</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div class="main">
+
+  <div class="profile-card {% if user.is_admin %}is-admin{% endif %}">
+
+    <div class="profile-header">
+      <div class="avatar">{{ user.avatar }}</div>
+      <div class="profile-meta">
+        <h1>{{ user.name }}
+          {% if user.is_admin %}<span class="admin-badge">ADMIN</span>{% endif %}
+        </h1>
+        <p class="profile-id">User ID: <code>#{{ user.id }}</code></p>
+        <p class="profile-job">{{ user.job }}</p>
+      </div>
+    </div>
+
+    <div class="profile-body">
+
+      <div class="field-row">
+        <span class="field-label">📝 Bio</span>
+        <span class="field-value">{{ user.bio }}</span>
+      </div>
+
+      <div class="field-divider"></div>
+
+      <div class="field-grid">
+        <div class="field-cell">
+          <span class="field-label">📧 Email</span>
+          <span class="field-value">{{ user.email }}</span>
+        </div>
+        <div class="field-cell">
+          <span class="field-label">📱 Phone</span>
+          <span class="field-value">{{ user.phone }}</span>
+        </div>
+        <div class="field-cell">
+          <span class="field-label">📍 Location</span>
+          <span class="field-value">{{ user.location }}</span>
+        </div>
+        <div class="field-cell">
+          <span class="field-label">📅 Joined</span>
+          <span class="field-value">{{ user.joined }}</span>
+        </div>
+      </div>
+
+      {% if user.note %}
+      <div class="field-divider"></div>
+      <div class="field-row highlight">
+        <span class="field-label">🚩 Secret Note</span>
+        <span class="field-value flag">{{ user.note }}</span>
+      </div>
+      {% endif %}
+
+    </div>
+
+    {% if not is_own %}
+    <div class="profile-notice">
+      ⚠️ Bạn đang xem profile của người khác — server không kiểm tra quyền truy cập.
+    </div>
+    {% endif %}
+
+  </div>
+
+</div>
+</body>
+</html>

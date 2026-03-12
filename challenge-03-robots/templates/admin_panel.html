@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — NexCore</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">Nex<span class="logo-accent">Core</span></a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main class="page-main">
+
+  <div class="admin-warning">
+    ⚠️ Trang này không được lập chỉ mục bởi search engine — nhưng bạn vẫn tìm thấy nó.
+  </div>
+
+  <div class="admin-box">
+    <div class="admin-header">
+      <span class="admin-icon">🔐</span>
+      <div>
+        <h1>Admin Panel</h1>
+        <p class="page-sub">Internal dashboard — NexCore Inc.</p>
+      </div>
+    </div>
+
+    <div class="admin-stats">
+      <div class="stat-card">
+        <p class="stat-num">1,284</p>
+        <p class="stat-label">Total Users</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-num">342</p>
+        <p class="stat-label">Active Today</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-num">99.9%</p>
+        <p class="stat-label">Uptime</p>
+      </div>
+    </div>
+
+    <div class="flag-box">
+      <p class="flag-label">🚩 System Secret Key</p>
+      <p class="flag-value">{{ flag }}</p>
+    </div>
+
+    <p class="admin-hint">
+      Trang này bị ẩn khỏi Google vì được khai báo trong <code>/robots.txt</code> — nhưng "ẩn" không có nghĩa là "bảo mật".
+    </p>
+  </div>
+
+</main>
+
+<footer>
+  <p>© 2026 NexCore Inc.</p>
+</footer>
+
+</body>
+</html>
