@@ -189,7 +189,7 @@ h1 {
 mark {
   color: transparent;
   background: transparent;
-  user-select: text;
+  user-select: none;
 }
 /* ---- Footer ---- */
 footer {
