@@ -1,6 +1,5 @@
 /* =============================================
    NCT CTF — Challenge 02: IDOR
-   Aesthetic: Clean dark corporate / hacker
    ============================================= */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

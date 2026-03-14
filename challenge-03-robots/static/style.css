@@ -1,8 +1,3 @@
-/* =============================================
-   NexCore — CTF Challenge 03: robots.txt
-   Aesthetic: Clean modern startup / SaaS
-   ============================================= */
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
